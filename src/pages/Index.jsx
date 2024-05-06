@@ -1,17 +1,39 @@
-// Update this page (the content is just a fallback if you fail and example)
-// Use chakra-ui
-import { Container, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Container, Text, VStack, Flex, IconButton } from "@chakra-ui/react";
+import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
+import { useState } from "react";
 
-// Example of using react-icons
-// import { FaRocket } from "react-icons/fa";
-// <IconButton aria-label="Add" icon={<FaRocket />} size="lg" />; // IconButton would also have to be imported from chakra
+const songs = [
+  { title: "Song One", artist: "Artist A" },
+  { title: "Song Two", artist: "Artist B" },
+  { title: "Song Three", artist: "Artist C" }
+];
 
 const Index = () => {
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const skipSong = (forward = true) => {
+    if (forward) {
+      setCurrentSongIndex((currentSongIndex + 1) % songs.length);
+    } else {
+      setCurrentSongIndex((currentSongIndex - 1 + songs.length) % songs.length);
+    }
+  };
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4}>
-        <Text fontSize="2xl">Your Blank Canvas</Text>
-        <Text>Chat with the agent to start making edits.</Text>
+        <Text fontSize="2xl" fontWeight="bold">{songs[currentSongIndex].title}</Text>
+        <Text fontSize="lg">{songs[currentSongIndex].artist}</Text>
+        <Flex>
+          <IconButton aria-label="Previous" icon={<FaBackward />} onClick={() => skipSong(false)} m={2} />
+          <IconButton aria-label={isPlaying ? "Pause" : "Play"} icon={isPlaying ? <FaPause /> : <FaPlay />} onClick={playPause} m={2} />
+          <IconButton aria-label="Next" icon={<FaForward />} onClick={() => skipSong(true)} m={2} />
+        </Flex>
       </VStack>
     </Container>
   );
